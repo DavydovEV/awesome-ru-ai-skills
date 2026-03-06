@@ -1,3 +1,9 @@
+---
+name: yax
+description: CLI tool for Yandex Disk, Calendar, and Mail via Yandex OAuth API
+version: 1.0.0
+---
+
 # yax — Yandex 360 CLI
 
 CLI tool for Yandex Disk, Calendar, and Mail via Yandex OAuth API.

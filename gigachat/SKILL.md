@@ -1,3 +1,9 @@
+---
+name: gigachat
+description: Integrate GigaChat (Sber AI) with OpenClaw via gpt2giga proxy
+version: 1.0.0
+---
+
 # GigaChat Skill
 
 Integrate GigaChat (Sber AI) with OpenClaw via gpt2giga proxy.

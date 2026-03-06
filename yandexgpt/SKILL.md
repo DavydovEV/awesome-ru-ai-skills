@@ -1,3 +1,9 @@
+---
+name: yandexgpt
+description: OpenAI-compatible translation proxy for Yandex Cloud Foundation Models (YandexGPT)
+version: 1.0.0
+---
+
 # YandexGPT Proxy
 
 OpenAI-compatible translation proxy for Yandex Cloud Foundation Models (YandexGPT).
