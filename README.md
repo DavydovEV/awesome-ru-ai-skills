@@ -1,350 +1,195 @@
-# OpenClaw Russian AI Skills
+# Скиллы для работы с российскими AI-сервисами
 
-Skills that give your AI coding agent access to Russian services: **GigaChat** (Sber), **YandexGPT**, **Yandex 360** (Disk, Calendar, Mail & Telemost), **Yandex Cloud**, and **Yandex Metrika**.
+Набор скиллов для AI-агентов (OpenClaw, Claude Code и др.), дающих доступ к российским сервисам: **GigaChat**, **YandexGPT**, **Яндекс 360**, **Yandex Cloud** и **Яндекс Метрика**.
 
-## What This Enables
+## Что умеют
 
-Talk to your agent in natural language — it handles the rest:
-
-| You say | Agent does |
-|---------|----------|
-| *"Answer in Russian using GigaChat-Max"* | Routes request through GigaChat proxy |
-| *"Summarize this file with YandexGPT"* | Sends content through YandexGPT proxy |
-| *"Upload report.pdf to Yandex Disk"* | Runs `yax disk upload` via CLI |
-| *"Create a meeting tomorrow at 14:00"* | Runs `yax calendar create` with timezone |
-| *"Deploy my static site to Object Storage"* | Runs `yc storage` commands |
-| *"Check my Metrika stats for the last 30 days"* | Calls Metrika Reporting API |
-| *"Create a DNS record for my domain"* | Runs `yc dns zone add-records` |
-| *"Set up Metrika counter in my Next.js app"* | Generates tracking component code |
+| Вы говорите | Агент делает |
+|-------------|-------------|
+| *«Ответь на русском через GigaChat-Max»* | Направляет запрос через прокси GigaChat |
+| *«Суммаризируй файл через YandexGPT»* | Отправляет через прокси YandexGPT |
+| *«Загрузи отчёт на Яндекс Диск»* | `yax disk upload` |
+| *«Создай встречу завтра в 14:00»* | `yax calendar create` |
+| *«Задеплой сайт в Object Storage»* | `yc storage s3 cp --recursive` |
+| *«Покажи статистику Метрики за 30 дней»* | Reporting API Метрики |
+| *«Добавь DNS-запись для домена»* | `yc dns zone add-records` |
+| *«Настрой счётчик Метрики в Next.js»* | Генерирует компонент трекинга |
 
 ---
 
-## Skills
+## Скиллы
 
-| Skill | Directory | What it does |
-|-------|-----------|-------------|
-| **GigaChat** | `gigachat/` | Sber GigaChat API — Lite, Pro, Max models via OpenAI-compatible proxy |
-| **YandexGPT** | `yandexgpt/` | Yandex Foundation Models — YandexGPT, Lite, 32K via proxy |
-| **Yandex 360** | `yax/` | Disk, Calendar, Mail (IMAP/SMTP), Telemost via `yax` CLI |
-| **Yandex Cloud** | `yandex-cloud/` | Full `yc` CLI reference — storage, compute, DNS, serverless, databases, certificates, and 30+ service groups |
-| **Yandex Metrika** | `yandex-metrika/` | Analytics API — traffic stats, counters, goals, reports + Next.js setup guide |
+| Скилл | Директория | Описание |
+|-------|-----------|----------|
+| **GigaChat** | `gigachat/` | API Сбера — модели Lite, Pro, Max через OpenAI-совместимый прокси |
+| **YandexGPT** | `yandexgpt/` | Yandex Foundation Models — YandexGPT, Lite, 32K через прокси |
+| **Яндекс 360** | `yax/` | Диск, Календарь, Почта (IMAP/SMTP), Телемост через CLI `yax` |
+| **Yandex Cloud** | `yandex-cloud/` | Полный справочник `yc` CLI — хранилище, вычисления, DNS, serverless, БД, сертификаты и 30+ сервисов |
+| **Яндекс Метрика** | `yandex-metrika/` | API аналитики — трафик, счётчики, цели, отчёты + гайд по настройке в Next.js |
 
 ---
 
-## Installation
+## Установка
 
-### Option 1: ClawHub (recommended)
-
-Install each skill individually from ClawHub:
+### ClawHub
 
 ```bash
-clawhub install smvlx/sber-gigachat
-clawhub install smvlx/yandex-gpt
-clawhub install smvlx/yandex-cli-yax
-clawhub install smvlx/yandex-cloud
-clawhub install smvlx/yandex-metrika
+clawhub install smvlx/openclaw-ru-skills
 ```
 
-### Option 2: Install script
+### Скрипт
 
 ```bash
 git clone https://github.com/smvlx/openclaw-ru-skills.git /tmp/openclaw-ru-skills
 /tmp/openclaw-ru-skills/install.sh
 ```
 
-This copies each skill into `~/.openclaw/skills/` and installs dependencies.
+Копирует все скиллы в `~/.openclaw/skills/` и ставит зависимости.
 
-### Option 3: Manual install
+### Вручную
 
 ```bash
 git clone https://github.com/smvlx/openclaw-ru-skills.git
-cp -r openclaw-ru-skills/gigachat ~/.openclaw/skills/
-cp -r openclaw-ru-skills/yandexgpt ~/.openclaw/skills/
-cp -r openclaw-ru-skills/yax ~/.openclaw/skills/
-cp -r openclaw-ru-skills/yandex-cloud ~/.openclaw/skills/
-cp -r openclaw-ru-skills/yandex-metrika ~/.openclaw/skills/
+cp -r openclaw-ru-skills/{gigachat,yandexgpt,yax,yandex-cloud,yandex-metrika} ~/.openclaw/skills/
 cd ~/.openclaw/skills/yax && npm install --omit=dev
 ```
 
-### Option 4: Claude Code
+### Claude Code
 
-For Claude Code users, copy the skill directories to `~/.claude/skills/`:
+Для пользователей Claude Code — копируйте в `~/.claude/skills/`:
 
 ```bash
 git clone https://github.com/smvlx/openclaw-ru-skills.git /tmp/openclaw-ru-skills
-cp -r /tmp/openclaw-ru-skills/yandex-cloud ~/.claude/skills/
-cp -r /tmp/openclaw-ru-skills/yandex-metrika ~/.claude/skills/
+cp -r /tmp/openclaw-ru-skills/{yandex-cloud,yandex-metrika} ~/.claude/skills/
 ```
 
-### Option 5: Chat-based install
+### Через чат
 
-Paste the repo URL into your agent conversation:
+Вставьте ссылку на репо в диалог с агентом:
 
-> Install skills from https://github.com/smvlx/openclaw-ru-skills
-
-The agent will handle cloning and setup.
+> Установи скиллы из https://github.com/smvlx/openclaw-ru-skills
 
 ---
 
-## Setup
+## Настройка
 
-Each skill needs **credentials from external services** — that's the only part you do manually. Everything else your agent handles.
+Каждый скилл требует **креды от внешних сервисов** — это единственное, что делаете вы. Остальное агент настраивает сам.
 
-### GigaChat (Sber AI)
+### GigaChat (Сбер)
 
-<table>
-<tr><td width="50%">
+| Вы (2 мин) | Агент |
+|------------|-------|
+| 1. Регистрация на [developers.sber.ru](https://developers.sber.ru/) | Создаёт `.env`, ставит `gpt2giga` |
+| 2. Создать приложение GigaChat API | Запускает прокси на `localhost:8443` |
+| 3. Скопировать Client ID + Secret | Регистрирует провайдер |
+| 4. Скоуп: `GIGACHAT_API_PERS` (бесплатно) или `_CORP` | |
 
-**You do once (2 min)**
+**Модели:** GigaChat Lite · Pro · MAX
 
-1. Register at [developers.sber.ru](https://developers.sber.ru/)
-2. Create a GigaChat API application
-3. Copy **Client ID** and **Client Secret**
-4. Choose scope: `GIGACHAT_API_PERS` (free) or `GIGACHAT_API_CORP` (paid)
-5. Give credentials to your agent
+### YandexGPT
 
-</td><td width="50%">
+| Вы (3 мин) | Агент |
+|------------|-------|
+| 1. [Yandex Cloud Console](https://console.cloud.yandex.ru/iam) → сервисный аккаунт | Создаёт `.env` |
+| 2. Роль `ai.languageModels.user` | Запускает прокси на `localhost:8444` |
+| 3. Создать API-ключ, запомнить Folder ID | Регистрирует провайдер |
 
-**Agent automates**
+**Модели:** YandexGPT Lite · YandexGPT · YandexGPT 32K
 
-```bash
-# Create env file
-cat > ~/.openclaw/gigachat-new.env << 'EOF'
-CLIENT_ID="<your-id>"
-CLIENT_SECRET="<your-secret>"
-GIGACHAT_CREDENTIALS=$(echo -n "$CLIENT_ID:$CLIENT_SECRET" | base64)
-GIGACHAT_SCOPE="GIGACHAT_API_PERS"
-EOF
+### Яндекс 360 (Диск, Календарь, Почта, Телемост)
 
-# Install proxy dependency
-pip3 install gpt2giga
+| Вы (3 мин) | Агент |
+|------------|-------|
+| 1. OAuth-приложение на [oauth.yandex.ru/client/new](https://oauth.yandex.ru/client/new) | Запускает `yax auth device` |
+| 2. Redirect URI: `https://oauth.yandex.ru/verification_code` | Показывает URL + код для подтверждения |
+| 3. Скоупы: `cloud_api:disk.*`, `calendar:all`, `mail:*`, `telemost-api:*` | |
 
-# Start proxy (localhost:8443)
-start-proxy.sh
-```
-
-</td></tr>
-</table>
-
-**Models:** GigaChat Lite, GigaChat Pro, GigaChat MAX
-
----
-
-### YandexGPT (Foundation Models)
-
-<table>
-<tr><td width="50%">
-
-**You do once (3 min)**
-
-1. Go to [Yandex Cloud Console](https://console.cloud.yandex.ru/iam)
-2. Create a service account
-3. Grant role `ai.languageModels.user`
-4. Create an API key
-5. Note your **Folder ID** and **API Key**
-6. Give credentials to your agent
-
-</td><td width="50%">
-
-**Agent automates**
-
-```bash
-# Create env file
-cat > ~/.openclaw/yandexgpt.env << 'EOF'
-YANDEX_API_KEY="<your-api-key>"
-YANDEX_FOLDER_ID="<your-folder-id>"
-YANDEX_PROXY_PORT="8444"
-EOF
-
-# Start proxy (localhost:8444)
-start.sh
-```
-
-</td></tr>
-</table>
-
-**Models:** YandexGPT Lite, YandexGPT, YandexGPT 32K
-
----
-
-### Yandex 360 (Disk, Calendar, Mail & Telemost)
-
-<table>
-<tr><td width="50%">
-
-**You do once (3 min)**
-
-1. Create OAuth app at [oauth.yandex.ru/client/new](https://oauth.yandex.ru/client/new)
-2. Set redirect URI: `https://oauth.yandex.ru/verification_code`
-3. Enable scopes for the services you need:
-
-   | Service | Scope |
-   |---------|-------|
-   | **Disk** | `cloud_api:disk.app_folder`, `cloud_api:disk.info` |
-   | **Calendar** | `calendar:all` |
-   | **Mail** | `mail:imap_full`, `mail:smtp` |
-   | **Telemost** | `telemost-api:conferences.create` |
-
-4. Note **Client ID**
-5. Give credentials to your agent
-
-</td><td width="50%">
-
-**Agent automates**
-
-```bash
-# Authenticate (device code flow)
-cd yax && node src/yax.cjs auth device
-```
-
-</td></tr>
-</table>
-
----
+Все четыре сервиса используют один OAuth-токен.
 
 ### Yandex Cloud
 
-<table>
-<tr><td width="50%">
+| Вы (2 мин) | Агент |
+|------------|-------|
+| 1. Установить `yc`: `curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh \| bash` | Работает с `yc` напрямую |
+| 2. `yc init` → следовать инструкциям | Storage, Compute, DNS, Serverless, БД и 30+ сервисов |
 
-**You do once (2 min)**
+### Яндекс Метрика
 
-1. Install `yc` CLI:
-   ```bash
-   curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
-   ```
-2. Run `yc init` and follow the prompts
-3. That's it — the skill uses the `yc` CLI directly
-
-</td><td width="50%">
-
-**Agent can do**
-
-```bash
-# Storage
-yc storage bucket create --name my-site
-yc storage s3 cp --recursive ./out/ s3://my-site/
-
-# Compute
-yc compute instance create --name my-vm ...
-
-# DNS, certs, serverless, databases...
-yc dns zone add-records ...
-yc certificate-manager certificate request ...
-yc serverless function create ...
-```
-
-</td></tr>
-</table>
-
-Covers 30+ service groups: storage, compute, VPC, DNS, certificates, managed databases (PostgreSQL, MySQL, ClickHouse, MongoDB, Redis, Kafka), Kubernetes, serverless, CDN, load balancers, and more.
+| Вы (3 мин) | Агент |
+|------------|-------|
+| 1. OAuth-приложение на [oauth.yandex.com](https://oauth.yandex.com/?dialog=create-client-entry) | Вызывает Reporting API |
+| 2. Скоупы: `metrika:read`, `metrika:write` | Управляет счётчиками и целями |
+| 3. Получить токен и сохранить в `.env.local` как `YM_OAUTH_TOKEN` | Настраивает трекинг в Next.js/React |
 
 ---
 
-### Yandex Metrika
-
-<table>
-<tr><td width="50%">
-
-**You do once (3 min)**
-
-1. Create an OAuth app at [oauth.yandex.com](https://oauth.yandex.com/?dialog=create-client-entry)
-2. Add scopes: `metrika:read`, `metrika:write`
-3. Generate a token via: `https://oauth.yandex.com/authorize?response_type=token&client_id=<app_id>`
-4. Store the token (e.g. in `.env.local` as `YM_OAUTH_TOKEN`)
-
-</td><td width="50%">
-
-**Agent can do**
-
-```bash
-# Get traffic overview
-curl -H 'Authorization: OAuth TOKEN' \
-  'https://api-metrika.yandex.net/stat/v1/data?
-  id=COUNTER_ID&metrics=ym:s:visits,ym:s:users
-  &date1=30daysAgo&date2=today'
-
-# Manage counters and goals
-# Set up tracking in Next.js / React / HTML
-# Build custom reports with 20+ metrics
-```
-
-</td></tr>
-</table>
-
-Includes: Management API (counters, goals), Reporting API (stats, time-series, comparisons), Next.js setup guide with SPA tracking.
-
----
-
-## Architecture
+## Архитектура
 
 ```
-                          AI Coding Agent
+                           AI-агент
 
-  "Use GigaChat"    "Use YandexGPT"    "Deploy to Cloud"    "Check Metrika"
-       |                  |                   |                   |
-       v                  v                   v                   v
- +-----------+    +------------+    +------------------+   +-------------+
- | gpt2giga  |    | Node.js    |    | yc CLI           |   | Metrika API |
- | proxy     |    | proxy      |    | (direct)         |   | (REST)      |
- | :8443     |    | :8444      |    |                  |   |             |
- +-----+-----+    +-----+------+    +--+-----+----+----+   +------+------+
-       |                |              |     |    |               |
-       v                v              v     v    v               v
-   Sber API      Yandex Cloud      Storage  DNS  VMs     api-metrika.
-   (OAuth)       Foundation        Compute  ...  ...     yandex.net
-                 Models API
+  "GigaChat"       "YandexGPT"      "Yandex Cloud"     "Метрика"
+       │                 │                 │                 │
+       ▼                 ▼                 ▼                 ▼
+ ┌───────────┐   ┌────────────┐   ┌────────────────┐  ┌─────────────┐
+ │ gpt2giga  │   │ Node.js    │   │ yc CLI         │  │ Metrika API │
+ │ :8443     │   │ :8444      │   │                │  │ (REST)      │
+ └─────┬─────┘   └─────┬──────┘   └──┬────┬────┬───┘  └──────┬──────┘
+       │               │             │    │    │              │
+       ▼               ▼             ▼    ▼    ▼              ▼
+   Sber API     Foundation      Storage DNS  VMs    api-metrika.
+   (OAuth)      Models API      Compute ...  ...    yandex.net
 ```
 
 ---
 
-## Security
+## Безопасность
 
-- Credentials stored locally with restrictive permissions
-- Proxies bind to `127.0.0.1` only — no external access
-- GigaChat tokens auto-refresh via OAuth (~30 min expiry)
-- Yandex 360 uses OAuth device code flow — no passwords stored
-- No tokens or secrets hardcoded in skill files
-
----
-
-## Troubleshooting
-
-| Symptom | Cause | Fix |
-|---------|-------|-----|
-| GigaChat `401 Unauthorized` | Token expired | Restart `start-proxy.sh` |
-| GigaChat `402 Payment Required` | Quota exhausted | Switch model: Max -> Pro -> Lite |
-| YandexGPT `403 Forbidden` | Wrong folder ID | Check `~/.openclaw/yandexgpt.env` |
-| `yc: command not found` | CLI not in PATH | `export PATH="$HOME/yandex-cloud/bin:$PATH"` |
-| `yc` unauthenticated | No token | Run `yc init` |
-| Metrika 403 | Token missing scopes | Re-authorize with `metrika:read` scope |
-| Metrika no data | Counter not firing | Check `code_status`, remove `ssr:true` from static exports |
-| Yandex 360 token expired | OAuth refresh needed | Run `yax auth device` again |
-| Mail IMAP/SMTP timeout | Ports blocked | Deploy on VPS or local machine |
+- Креды хранятся локально с ограниченными правами
+- Прокси слушают только `127.0.0.1`
+- GigaChat-токены обновляются автоматически (~30 мин)
+- Яндекс 360 — OAuth device code flow, пароли не сохраняются
+- В файлах скиллов нет захардкоженных токенов и секретов
 
 ---
 
-## Detailed Documentation
+## Решение проблем
 
-Each skill has its own `SKILL.md` with full reference:
-
-- [GigaChat SKILL.md](./gigachat/SKILL.md) — Token management, agent creation, model details
-- [YandexGPT SKILL.md](./yandexgpt/SKILL.md) — Proxy internals, model URI mapping
-- [Yandex 360 SKILL.md](./yax/SKILL.md) — Disk API, CalDAV, Mail, Telemost, OAuth flow
-- [Yandex Cloud SKILL.md](./yandex-cloud/SKILL.md) — Full `yc` CLI reference, 30+ service groups
-- [Yandex Metrika SKILL.md](./yandex-metrika/SKILL.md) — Management, Reporting & Logs APIs, Next.js setup
-
----
-
-## Links
-
-- **GigaChat API** — [developers.sber.ru/docs/ru/gigachat/overview](https://developers.sber.ru/docs/ru/gigachat/overview)
-- **gpt2giga** — [pypi.org/project/gpt2giga](https://pypi.org/project/gpt2giga/)
-- **YandexGPT API** — [cloud.yandex.ru/docs/foundation-models](https://cloud.yandex.ru/docs/foundation-models/)
-- **Yandex Cloud CLI** — [cloud.yandex.ru/docs/cli](https://cloud.yandex.ru/docs/cli/)
-- **Yandex Metrika API** — [yandex.ru/dev/metrika](https://yandex.ru/dev/metrika/)
-- **Yandex OAuth** — [oauth.yandex.ru](https://oauth.yandex.ru/)
+| Симптом | Причина | Решение |
+|---------|---------|--------|
+| GigaChat `401` | Токен истёк | Перезапустить `start-proxy.sh` |
+| GigaChat `402` | Исчерпана квота | Переключить модель: Max → Pro → Lite |
+| YandexGPT `403` | Неверный Folder ID | Проверить `.env` |
+| `yc: command not found` | CLI не в PATH | `export PATH="$HOME/yandex-cloud/bin:$PATH"` |
+| `yc` не авторизован | Нет токена | `yc init` |
+| Метрика `403` | Нет скоупа | Переавторизоваться с `metrika:read` |
+| Метрика — нет данных | Счётчик не работает | Проверить `code_status`, убрать `ssr:true` для статик-экспорта |
+| Яндекс 360 — токен истёк | OAuth refresh | `yax auth device` |
+| Почта — таймаут IMAP/SMTP | Порты заблокированы | Использовать VPS или локальную машину |
 
 ---
 
-Created by [@smvlx](https://github.com/smvlx)
+## Документация
+
+Подробная документация в `SKILL.md` каждого скилла:
+
+- [GigaChat](./gigachat/SKILL.md) — управление токенами, агенты, модели
+- [YandexGPT](./yandexgpt/SKILL.md) — прокси, маппинг моделей
+- [Яндекс 360](./yax/SKILL.md) — Disk API, CalDAV, Mail, Telemost, OAuth
+- [Yandex Cloud](./yandex-cloud/SKILL.md) — полный справочник `yc` CLI, 30+ сервисов
+- [Яндекс Метрика](./yandex-metrika/SKILL.md) — Management, Reporting & Logs API, настройка в Next.js
+
+---
+
+## Ссылки
+
+- [GigaChat API](https://developers.sber.ru/docs/ru/gigachat/overview)
+- [gpt2giga](https://pypi.org/project/gpt2giga/)
+- [YandexGPT API](https://cloud.yandex.ru/docs/foundation-models/)
+- [Yandex Cloud CLI](https://cloud.yandex.ru/docs/cli/)
+- [Яндекс Метрика API](https://yandex.ru/dev/metrika/)
+- [Яндекс OAuth](https://oauth.yandex.ru/)
+
+---
+
+Создал [@smvlx](https://github.com/smvlx)
