@@ -2,7 +2,7 @@
 name: yax
 description: CLI tool for Yandex Disk, Calendar, and Mail via Yandex OAuth API
 version: 1.1.0
-metadata: {"openclaw":{"emoji":"📁","homepage":"https://github.com/smvlx/openclaw-ru-skills","os":["darwin","linux"],"requires":{"bins":["node"],"env":["YAX_CLIENT_ID"]},"primaryEnv":"YAX_CLIENT_ID","configPaths":["~/.openclaw/yax.env","~/.openclaw/yax-token.json"]}}
+metadata: {"openclaw":{"emoji":"📁","homepage":"https://github.com/smvlx/awesome-ru-ai-skills","os":["darwin","linux"],"requires":{"bins":["node"],"env":["YAX_CLIENT_ID"]},"primaryEnv":"YAX_CLIENT_ID","configPaths":["~/.openclaw/yax.env","~/.openclaw/yax-token.json"]}}
 ---
 
 # yax — Yandex 360 CLI
