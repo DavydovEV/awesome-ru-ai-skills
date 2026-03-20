@@ -25,6 +25,7 @@ A collection of skills for AI agents — integrations with Russian commercial se
 | 📁 [yax](./skills/yax/) | Yandex 360: Disk, Calendar, Mail, Telemost | CC · OC | [@smvlx](https://github.com/smvlx) |
 | ☁️ [yandex-cloud](./skills/yandex-cloud/) | Yandex Cloud infrastructure (yc CLI) | CC · OC | [@smvlx](https://github.com/smvlx) |
 | 📊 [yandex-metrika](./skills/yandex-metrika/) | Yandex Metrika web analytics | CC · OC | [@smvlx](https://github.com/smvlx) |
+| 🛒 [marketplace-ru](./skills/marketplace-ru/) | Ozon, Wildberries, Yandex Market — orders, prices, stock | CC · OC | [@smvlx](https://github.com/smvlx) |
 | _bitrix24_ | _Bitrix24 CRM API_ | — | _open for PR_ |
 | _amocrm_ | _amoCRM / Kommo API_ | — | _open for PR_ |
 

@@ -25,6 +25,7 @@
 | 📁 [yax](./skills/yax/) | Яндекс 360: Диск, Календарь, Почта, Телемост | CC · OC | [@smvlx](https://github.com/smvlx) |
 | ☁️ [yandex-cloud](./skills/yandex-cloud/) | Инфраструктура Яндекс Облака (yc CLI) | CC · OC | [@smvlx](https://github.com/smvlx) |
 | 📊 [yandex-metrika](./skills/yandex-metrika/) | Яндекс Метрика — веб-аналитика | CC · OC | [@smvlx](https://github.com/smvlx) |
+| 🛒 [marketplace-ru](./skills/marketplace-ru/) | Ozon, Wildberries, Яндекс Маркет — заказы, цены, остатки | CC · OC | [@smvlx](https://github.com/smvlx) |
 | _bitrix24_ | _Bitrix24 CRM API_ | — | _открыто для PR_ |
 | _amocrm_ | _amoCRM / Kommo API_ | — | _открыто для PR_ |
 
