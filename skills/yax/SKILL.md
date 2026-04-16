@@ -1,7 +1,7 @@
 ---
 name: yax
 description: CLI tool for Yandex Disk, Calendar, and Mail via Yandex OAuth API
-version: 1.2.0
+version: 1.3.0
 metadata: {"openclaw":{"emoji":"📁","homepage":"https://github.com/smvlx/awesome-ru-ai-skills","os":["darwin","linux"],"requires":{"bins":["node"],"env":["YAX_CLIENT_ID"]},"primaryEnv":"YAX_CLIENT_ID","configPaths":["~/.openclaw/yax.env","~/.openclaw/yax-token.json"]}}
 ---
 
@@ -13,7 +13,7 @@ CLI tool for Yandex Disk, Calendar, and Mail via Yandex OAuth API.
 
 - **Disk**: info, list, mkdir, upload, download
 - **Calendar**: list calendars, list events, create/update/delete events (via CalDAV)
-- **Mail**: ⚠️ Limited — Yandex has no public HTTP API for mail (IMAP/SMTP only, ports often blocked in cloud)
+- **Mail**: Full IMAP access via XOAUTH2 (list, read, delete emails)
 
 ## Prerequisites
 
@@ -23,7 +23,8 @@ CLI tool for Yandex Disk, Calendar, and Mail via Yandex OAuth API.
      - `cloud_api:disk.write` — ⚠️ Запись на диск (без этого НЕ работает upload!)
      - `cloud_api:disk.read` — Чтение информации о диске
      - `calendar:all` — Calendar read/write
-     - `mail:smtp` — Mail sending (SMTP only, no HTTP API)
+     - `mail:imap_full` — Full IMAP access (read, delete)
+     - `mail:smtp` — Mail sending via SMTP
    - Note the Client ID and Client Secret
 
 2. Save config to `~/.openclaw/yax.env`:
@@ -61,8 +62,11 @@ node src/yax.cjs calendar create "Meeting" "2026-02-14" "11:00:00" "12:00:00" "D
 node src/yax.cjs calendar update "<uid>" "New Title" "2026-02-14" "12:00:00" "13:00:00" "Desc" "Europe/Moscow"   # обновить
 node src/yax.cjs calendar delete "<uid>"               # удалить
 
-# Mail (informational only)
-node src/yax.cjs mail
+# Mail
+node src/yax.cjs mail folders              # список папок
+node src/yax.cjs mail list INBOX 10        # последние 10 писем
+node src/yax.cjs mail read <uid>           # прочитать письмо
+node src/yax.cjs mail delete <uid>         # удалить письмо
 ```
 
 ## Implementation Details
@@ -77,7 +81,7 @@ node src/yax.cjs mail
 **Решение:** Токен жив 1 год, но после изменения прав приложения нужна повторная авторизация. Старые токены остаются рабочими до истечения, но с новыми scopes — только после re-auth.
 
 - **Calendar**: Uses raw CalDAV HTTP requests to `caldav.yandex.ru`. Automatically discovers user login via OAuth info endpoint and calendar paths via PROPFIND. Supports timezone-aware event creation. No external dependencies.
-- **Mail**: Yandex does not offer a public REST/HTTP API for mail operations. Only IMAP/SMTP is available, which requires direct TCP connections on ports 993/465 — typically blocked in cloud environments (Railway, etc.). The Yandex 360 Admin API exists for organization accounts but is not suitable for personal use.
+- **Mail**: IMAP via XOAUTH2 (no external deps). Uses Python stdlib `imaplib` + `email` modules. Requires `mail:imap_full` OAuth scope.
 
 ## Scripts
 

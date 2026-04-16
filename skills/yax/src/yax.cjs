@@ -636,14 +636,13 @@ async function calendarDelete(uid) {
 // --- Mail ---
 // Yandex doesn't have a public HTTP API for mail (only IMAP/SMTP).
 // We document this as a limitation. Below is a stub.
-function mailNote() {
-  console.log(`⚠️  Yandex Mail HTTP API is not publicly available.
-Yandex only supports IMAP/SMTP for mail access.
-Since SMTP/IMAP ports are often blocked in cloud environments,
-mail functionality is currently unavailable.
-
-Workaround: Use Yandex 360 Admin API if you have an organization account,
-or use the Yandex Mail web interface.`);
+function mailMain() {
+  const { spawn } = require("child_process");
+  const path = require("path");
+  const script = path.join(__dirname, "mail.py");
+  const args = process.argv.slice(3); // yax mail <subcommand> <args>
+  const child = spawn("python3", [script, ...args], { stdio: "inherit" });
+  child.on("error", (e) => console.error("Mail error:", e.message));
 }
 
 // --- CLI ---
@@ -727,7 +726,7 @@ async function main() {
         }
         break;
       case "mail":
-        return mailNote();
+        return mailMain();
       default:
         console.log(`yax — Yandex 360 CLI
 
@@ -740,7 +739,10 @@ Commands:
   disk download <remote> <local> Download file
   calendar list           List calendars
   calendar create <summary> <YYYY-MM-DD> <HH:MM:SS> [HH:MM:SS] [desc] [tz]  Create event
-  mail                    Mail info (limited)`);
+  mail list [folder] [n]    List recent emails (default: INBOX, last 10)
+  mail read <uid> [folder] Read email by UID
+  mail delete <uid> [folder] Delete email by UID
+  mail folders             List all mail folders`);
     }
   } catch (e) {
     console.error("Error:", e.message);
