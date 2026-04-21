@@ -742,7 +742,10 @@ Commands:
   mail list [folder] [n]    List recent emails (default: INBOX, last 10)
   mail read <uid> [folder] Read email by UID
   mail delete <uid> [folder] Delete email by UID
-  mail folders             List all mail folders`);
+  mail folders             List all mail folders
+  mail attachments <uid> [folder]  List attachments in email
+  mail download <uid> <name> [folder] [dir]  Download one attachment
+  mail download_all <uid> [folder] [dir]  Download all attachments`);
     }
   } catch (e) {
     console.error("Error:", e.message);

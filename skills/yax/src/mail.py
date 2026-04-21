@@ -79,6 +79,76 @@ def get_body(msg):
                 return text[:2000]
     return "(no text body)"
 
+def get_attachments(msg):
+    """Возвращает список вложений: [(filename, content, content_type)]"""
+    attachments = []
+    for part in msg.walk():
+        if part.get_content_disposition() == "attachment":
+            filename = decode_str(part.get_filename())
+            if filename:
+                payload = part.get_payload(decode=True)
+                if payload:
+                    ct = part.get_content_type()
+                    attachments.append((filename, payload, ct))
+    return attachments
+
+def cmd_attachments(uid, folder="INBOX"):
+    """Показать вложения письма"""
+    mail = get_mail()
+    status, _ = mail.select(folder)
+    if status != "OK":
+        print(f"❌ Cannot open folder: {folder}")
+        return
+    _, msg_data = mail.fetch(uid.encode(), "(RFC822)")
+    msg = email.message_from_bytes(msg_data[0][1])
+    attachments = get_attachments(msg)
+    if not attachments:
+        print("📎 Нет вложений")
+        return
+    print(f"📎 Вложения ({len(attachments)}):")
+    for i, (filename, content, ct) in enumerate(attachments):
+        size = len(content) / 1024
+        print(f"  [{i}] {filename} ({size:.1f} KB)")
+
+def cmd_download(uid, attachment_name, folder="INBOX", output_dir="."):
+    """Скачать конкретное вложение"""
+    mail = get_mail()
+    status, _ = mail.select(folder)
+    if status != "OK":
+        print(f"❌ Cannot open folder: {folder}")
+        return
+    _, msg_data = mail.fetch(uid.encode(), "(RFC822)")
+    msg = email.message_from_bytes(msg_data[0][1])
+    attachments = get_attachments(msg)
+    for filename, content, ct in attachments:
+        if filename == attachment_name:
+            filepath = os.path.join(output_dir, filename)
+            with open(filepath, "wb") as f:
+                f.write(content)
+            print(f"✅ Saved: {filepath}")
+            return
+    print(f"❌ Attachment '{attachment_name}' not found")
+
+def cmd_download_all(uid, folder="INBOX", output_dir="./attachments"):
+    """Скачать все вложения письма"""
+    mail = get_mail()
+    status, _ = mail.select(folder)
+    if status != "OK":
+        print(f"❌ Cannot open folder: {folder}")
+        return
+    _, msg_data = mail.fetch(uid.encode(), "(RFC822)")
+    msg = email.message_from_bytes(msg_data[0][1])
+    attachments = get_attachments(msg)
+    if not attachments:
+        print("📎 Нет вложений")
+        return
+    os.makedirs(output_dir, exist_ok=True)
+    for filename, content, ct in attachments:
+        filepath = os.path.join(output_dir, filename)
+        with open(filepath, "wb") as f:
+            f.write(content)
+        print(f"✅ {filepath}")
+
 def cmd_list(folder, limit=10):
     mail = get_mail()
     status, data = mail.select(folder)
@@ -223,5 +293,29 @@ if __name__ == "__main__":
             subject = sys.argv[3]
             body = sys.argv[4] if len(sys.argv) > 4 else ""
             cmd_send(to, subject, body)
+    elif cmd == "attachments":
+        if len(sys.argv) < 3:
+            print("Usage: mail.py attachments <uid> [folder]")
+        else:
+            uid = sys.argv[2]
+            folder = sys.argv[3] if len(sys.argv) > 3 else "INBOX"
+            cmd_attachments(uid, folder)
+    elif cmd == "download":
+        if len(sys.argv) < 4:
+            print("Usage: mail.py download <uid> <attachment_name> [folder] [output_dir]")
+        else:
+            uid = sys.argv[2]
+            attachment_name = sys.argv[3]
+            folder = sys.argv[4] if len(sys.argv) > 4 else "INBOX"
+            output_dir = sys.argv[5] if len(sys.argv) > 5 else "."
+            cmd_download(uid, attachment_name, folder, output_dir)
+    elif cmd == "download_all":
+        if len(sys.argv) < 3:
+            print("Usage: mail.py download_all <uid> [folder] [output_dir]")
+        else:
+            uid = sys.argv[2]
+            folder = sys.argv[3] if len(sys.argv) > 3 else "INBOX"
+            output_dir = sys.argv[4] if len(sys.argv) > 4 else "./attachments"
+            cmd_download_all(uid, folder, output_dir)
     else:
-        print("Usage: mail.py [list|read|delete|folders|send]")
+        print("Usage: mail.py [list|read|delete|folders|send|attachments|download|download_all]")
